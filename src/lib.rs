@@ -18,6 +18,7 @@ struct FormData {
 }
 
 async fn subscribe(_form: web::Form<FormData>) -> impl Responder {
+    println!("{:?}",_form.name);
     HttpResponse::Ok()
 }
 
