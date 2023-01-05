@@ -6,5 +6,6 @@ use ztp::run;
 async fn main() -> Result<(), std::io::Error> {
     let tcplistener = TcpListener::bind("127.0.0.1:0")?;
 
+    println!("{:?}",tcplistener);
     run(tcplistener)?.await
 }
