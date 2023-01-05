@@ -1,0 +1,3 @@
+#Rust Learn
+
+first try.
