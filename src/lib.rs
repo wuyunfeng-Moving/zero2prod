@@ -1,6 +1,16 @@
+pub mod configuration;
+pub mod routes;
+pub mod startup;
+
 use std::net::TcpListener;
 
 use actix_web::{dev::Server, web, App, HttpRequest, HttpResponse, HttpServer, Responder};
+
+
+
+
+
+
 
 async fn greet(req: HttpRequest) -> impl Responder {
     let name = req.match_info().get("name").unwrap_or("World");

@@ -26,6 +26,8 @@ DB_NAME="${POSTGRES_DB:=newsletter}"
 # Check if a custom port has been set, otherwise default to '5432'
 DB_PORT="${POSTGRES_PORT:=5432}"
 # Launch postgres using Docker
+if [[ -z "${SKIP_DOCKER}" ]]
+then
 docker run \
 -e POSTGRES_USER=${DB_USER} \
 -e POSTGRES_PASSWORD=${DB_PASSWORD} \
@@ -33,6 +35,7 @@ docker run \
 -p "${DB_PORT}":5432 \
 -d postgres \
 postgres -N 1000
+fi
 # ^ Increased maximum number of connections for testing purposes
 export PGPASSWORD="${DB_PASSWORD}"
 until psql -h "localhost" -U "${DB_USER}" -p "${DB_PORT}" -d "postgres" -c '\q'; do
@@ -41,5 +44,7 @@ sleep 1
 done
 >&2 echo "Postgres is up and running on port ${DB_PORT}!"
 
-export DATABASE_URL=postgres://postgres:password@127.0.0.1:5432/newsletter
-sqlx migrate add create_subscriptions_table
+export DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@localhost:${DB_PORT}/${DB_NAME}
+sqlx database create
+sqlx migrate run
+>&2 echo "Postgres has been migrated, ready to go!"
